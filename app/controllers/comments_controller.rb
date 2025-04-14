@@ -51,10 +51,14 @@ class CommentsController < ApplicationController
 
   # DELETE /comments/1 or /comments/1.json
   def destroy
-    @comment.destroy
-    respond_to do |format|
-      format.html { redirect_back fallback_location: root_url, notice: "Comment was successfully destroyed." }
-      format.json { head :no_content }
+    if current_user == @comment.author
+      @comment.destroy
+      respond_to do |format|
+        format.html { redirect_back fallback_location: root_url, notice: "Comment was successfully destroyed." }
+        format.json { head :no_content }
+      end
+    else
+      redirect_back fallback_location: root_url, alert: "Not authorized"
     end
   end
 
@@ -70,10 +74,11 @@ class CommentsController < ApplicationController
     end
 
     def is_an_authorized_user
-      @photo = Photo.find(params.fetch(:comment).fetch(:photo_id))
+      photo_id = Comment.find(params[:id]).photo_id
+      @photo = Photo.find(photo.id)
+
       if current_user != @photo.owner && @photo.owner.private? && !current_user.leaders.include?(@photo.owner)
         redirect_back fallback_location: root_url, alert: "Not authorized"
       end
     end
-
 end
