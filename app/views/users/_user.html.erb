@@ -54,20 +54,21 @@
       </div>
 
       <div>
-        <%=
-          link_to "#",
-            class: "link-underline link-underline-opacity-0 link-underline-opacity-100-hover",
-            data: { 
-              "bs-toggle": "modal", 
-              "bs-target": "##{dom_id(user)}_pending"
-            } do %>
+        <% if current_user == user %>
+          <%=
+            link_to "#",
+              class: "link-underline link-underline-opacity-0 link-underline-opacity-100-hover",
+              data: { 
+                "bs-toggle": "modal", 
+                "bs-target": "##{dom_id(user)}_pending"
+              } do %>
 
-          <span class="font-weight-bold">
-            <%= user.pending.size %>
-          </span>
-          
-          pending
-
+            <span class="font-weight-bold">
+              <%= user.pending.size %>
+            </span>
+            
+            pending
+          <% end %>
         <% end %>
       </div>
     </div>
